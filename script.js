@@ -65,7 +65,7 @@ const arrowFunction = (tempElement) => tempElement.innerHTML += `
         </select>\
         <label for="check">I agree to be contacted at the above email</label>\
         <input type="checkbox" name="check" required/>\
-        <button type="submit" id="signupbtn" onsubmit="hide()">Submit</button>\
+        <button type="submit" id="signupbtn" onsubmit="runSubmit()">Submit</button>\
         <button type="button" id="cancelbtn" onclick="hide()">Cancel</button>\
     </form>\
     <div id="hoverExit"><p>Hover to close</p></div>`;
@@ -73,12 +73,41 @@ const arrowFunction = (tempElement) => tempElement.innerHTML += `
 //call the arrow function
 arrowFunction(newsletterElement);
 
+function runSubmit() {
+    validateName();
+    validateEmail();
+}
+
+//form validation
+function validateName() {
+    var name = document.getElementById("name");
+    if (name.validity.valueMissing) {
+        //popup message
+        name.setCustomValidity("Enter your name");
+    }
+    else {
+        //no pop up
+        name.setCustomValidity("");
+    }
+}
+
+function validateEmail() {
+    var email = document.getElementById("email");
+    if (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email.value) === false) {
+        console.log("SUCCESS!")
+    }
+}
+
 //add the onload listener
 window.addEventListener("load", function() {
     //display the newsletter
     document.getElementById("newsletter").appendChild(newsletterElement);
     //add the mouse event listener to the hover exit div
-    document.getElementById("hoverExit").addEventListener("mouseenter", function() {hide()})
+    document.getElementById("hoverExit").addEventListener("mouseenter", function() {hide()});
+
+    //add validation
+    document.getElementById("name").oninput = validateName;
+    document.getElementById("email").oninput = validateEmail;
 });
 
 var timeUpdate = setInterval(updateClock, 1000);
